@@ -1,6 +1,12 @@
+gnlTester
 Makefile
 main.c
 .gitignore
+*.txt
+empty
+get_next_line
+leakdetect.*
+*_no_nl
 
 # Prerequisites
 *.d
