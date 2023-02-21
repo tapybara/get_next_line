@@ -6,13 +6,13 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:11 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/19 18:12:05 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/21 22:19:04 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin_with_free(char *s1, char const *s2)
 {
 	char	*str;
 	size_t	s1_len;
@@ -32,10 +32,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	i = 0;
 	while (s1_len--)
-		str[i++] = *s1++;
+	{
+		str[i] = s1[i];
+		i++;
+	}
 	while (s2_len--)
-		str[i++] = *s2++;
+	{
+		str[i] = *s2++;
+		i++;
+	}
 	str[i] = '\0';
+	free(s1);
 	return (str);
 }
 
@@ -55,26 +62,6 @@ char	*ft_strchr(const char *s, int c)
 	if (c == '\0')
 		return ((char *)str);
 	return (NULL);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*p;
-	size_t	size;
-	int		i;
-
-	size = ft_strlen(s) + 1;
-	p = (char *)malloc(size * sizeof(char));
-	if (p == NULL)
-		return (p);
-	i = 0;
-	while (s[i] != '\0')
-	{
-		p[i] = s[i];
-		i++;
-	}
-	p[i] = '\0';
-	return (p);
 }
 
 size_t	ft_strlen(const char *s)

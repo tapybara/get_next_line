@@ -6,38 +6,64 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:14 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 01:18:07 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/21 22:43:05 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static char	*trim_str_by_1stlinebreak(char *backup)
+char	*backup_after_linebreak(char *backup)
 {
-	char	*trimed_str;
-	int		i;
-	int		trim_len;
+	char	*str;
+	size_t	start;
+	size_t	end;
+	size_t	size;
+	size_t	i;
 
-	i = 0;
-	trim_len = 1;
-	while (backup[i++] != '\n')
-		trim_len++;
-	trimed_str = (char *)malloc((trim_len + 1) * sizeof(char));
-	if (!trimed_str)
+	if (!backup)
 		return (NULL);
-	trimed_str[trim_len] = '\0';
+	start = 0;
+	while (backup[start] != '\n' && backup[start] != '\0')
+		start++;
+	end = start;
+	while (backup[end] != '\0')
+		end++;
+	size = end - start;
+	str = (char *)malloc(size * sizeof(char));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (size--)
+		str[i++] = backup[++start];
+	free(backup);
+	return (str);
+}
+
+static char	*make_line(char *backup)
+{
+	char	*str;
+	int		trim_len;
+	int		i;
+
+	trim_len = 0;
+	while (backup[trim_len] != '\n' && backup[trim_len] != '\0')
+		trim_len++;
+	str = (char *)malloc((trim_len + 2) * sizeof(char));
+	if (!str)
+		return (NULL);
+	str[trim_len] = '\n';
+	str[trim_len + 1] = '\0';
 	i = 0;
 	while (i < trim_len){
-		trimed_str[i] = backup[i];
+		str[i] = backup[i];
 		i++;
 	}
-	return (trimed_str);
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*backup;
-	char		*tmp;
 	char		*buf;
 	char		*line;
 	ssize_t		read_bytes;
@@ -58,17 +84,14 @@ char	*get_next_line(int fd)
 			return (NULL);	
 		}
 		buf[read_bytes] = '\0';
-		tmp = ft_strjoin(backup, buf); //結合前のbackupってfree必要じゃない？
-		free(backup);
-		backup = tmp;
-		tmp = NULL;
+		backup = ft_strjoin_with_free(backup, buf); //結合前のbackupってfree必要じゃない？
 		if (!read_bytes)
 		{
-			free(buf);
 			if (ft_strlen(backup))
-				return (backup);
+				break ;
 			else
 			{
+				free(buf);
 				free(backup);
 				backup = NULL;
 				return (NULL);
@@ -76,19 +99,13 @@ char	*get_next_line(int fd)
 		}
 	}
 	free(buf);
-	line = trim_str_by_1stlinebreak(backup);
-	tmp = ft_strdup(ft_strchr(backup, '\n') + 1);
-	free(backup);
-	backup = tmp;
+	line = make_line(backup);
+	backup = backup_after_linebreak(backup);
 	return (line);
 }
 
 // #include <stdio.h>
 // #include <fcntl.h>
-// // #include <libc.h>
-// // #include "leakdetect.h"
-// // #define malloc(s) leak_detelc_malloc(s, __FILE__, __LINE__)
-// // #define free leak_detect_free
 
 // int main()
 // {
@@ -96,10 +113,10 @@ char	*get_next_line(int fd)
 // 	int i;
 // 	int fd;
 
-// 	// leak_detect_init();
 // 	// fd = open("test.txt", O_RDONLY);
 // 	// fd = open("nl.txt", O_RDONLY);
-// 	fd = open("41_no_nl", O_RDONLY);
+// 	// fd = open("41_no_nl", O_RDONLY);
+// 	fd = open("41_with_nl", O_RDONLY);
 // 	// fd = open("42_no_nl", O_RDONLY);
 // 	// fd = open("empty", O_RDONLY);
 // 	// fd = open("big_line_no_nl", O_RDONLY);
@@ -113,16 +130,15 @@ char	*get_next_line(int fd)
 // 	// printf("buf=%s", get_next_line(fd2));
 // 	// printf("buf=%s", get_next_line(fd3));
 // 	// printf("buf=%s", get_next_line(fd4));
-// 	// leak_detect_check();
 //     return 0;
 // }
 
-// // __attribute__((destructor))
-// // static void destructor() {
-// //     system("leaks -q a.out");
-// // }
+// // // __attribute__((destructor))
+// // // static void destructor() {
+// // //     system("leaks -q a.out");
+// // // }
 
-// char	*ft_strjoin(char const *s1, char const *s2)
+// char	*ft_strjoin_with_free(char *s1, char const *s2)
 // {
 // 	char	*str;
 // 	size_t	s1_len;
@@ -142,10 +158,17 @@ char	*get_next_line(int fd)
 // 		return (NULL);
 // 	i = 0;
 // 	while (s1_len--)
-// 		str[i++] = *s1++;
+// 	{
+// 		str[i] = s1[i];
+// 		i++;
+// 	}
 // 	while (s2_len--)
-// 		str[i++] = *s2++;
+// 	{
+// 		str[i] = *s2++;
+// 		i++;
+// 	}
 // 	str[i] = '\0';
+// 	free(s1);
 // 	return (str);
 // }
 
@@ -165,26 +188,6 @@ char	*get_next_line(int fd)
 // 	if (c == '\0')
 // 		return ((char *)str);
 // 	return (NULL);
-// }
-
-// char	*ft_strdup(const char *s)
-// {
-// 	char	*p;
-// 	size_t	size;
-// 	int		i;
-
-// 	size = ft_strlen(s) + 1;
-// 	p = (char *)malloc(size * sizeof(char));
-// 	if (p == NULL)
-// 		return (p);
-// 	i = 0;
-// 	while (s[i] != '\0')
-// 	{
-// 		p[i] = s[i];
-// 		i++;
-// 	}
-// 	p[i] = '\0';
-// 	return (p);
 // }
 
 // size_t	ft_strlen(const char *s)
