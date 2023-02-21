@@ -6,7 +6,7 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:14 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 22:43:05 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/21 22:58:11 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,23 @@ static char	*make_line(char *backup)
 	trim_len = 0;
 	while (backup[trim_len] != '\n' && backup[trim_len] != '\0')
 		trim_len++;
-	str = (char *)malloc((trim_len + 2) * sizeof(char));
+	if (backup[trim_len] == '\n')
+		trim_len++;
+	str = (char *)malloc((trim_len + 1) * sizeof(char));
 	if (!str)
 		return (NULL);
-	str[trim_len] = '\n';
-	str[trim_len + 1] = '\0';
 	i = 0;
 	while (i < trim_len){
 		str[i] = backup[i];
 		i++;
 	}
+	if(backup[i] == '\n')
+	{
+		str[i] = '\n';
+		str[i + 1] = '\0';
+	}
+	if(backup[i] == '\0')
+		str[i] = '\0';
 	return (str);
 }
 
