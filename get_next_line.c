@@ -6,7 +6,7 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:14 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 22:58:11 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/21 23:15:37 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,7 @@ static char	*make_line(char *backup)
 		str[i] = backup[i];
 		i++;
 	}
-	if(backup[i] == '\n')
-	{
-		str[i] = '\n';
-		str[i + 1] = '\0';
-	}
-	if(backup[i] == '\0')
-		str[i] = '\0';
+	str[i] = '\0';
 	return (str);
 }
 
@@ -123,11 +117,12 @@ char	*get_next_line(int fd)
 // 	// fd = open("test.txt", O_RDONLY);
 // 	// fd = open("nl.txt", O_RDONLY);
 // 	// fd = open("41_no_nl", O_RDONLY);
-// 	fd = open("41_with_nl", O_RDONLY);
+// 	// fd = open("41_with_nl", O_RDONLY);
 // 	// fd = open("42_no_nl", O_RDONLY);
 // 	// fd = open("empty", O_RDONLY);
 // 	// fd = open("big_line_no_nl", O_RDONLY);
-// 	i = 3;
+// 	fd = open("multiple_nlx5", O_RDONLY);
+// 	i = 5;
 // 	while(i--)
 // 	{
 // 		str = get_next_line(fd);
@@ -140,10 +135,10 @@ char	*get_next_line(int fd)
 //     return 0;
 // }
 
-// // // __attribute__((destructor))
-// // // static void destructor() {
-// // //     system("leaks -q a.out");
-// // // }
+// // __attribute__((destructor))
+// // static void destructor() {
+// //     system("leaks -q a.out");
+// // }
 
 // char	*ft_strjoin_with_free(char *s1, char const *s2)
 // {

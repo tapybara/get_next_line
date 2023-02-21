@@ -6,7 +6,7 @@ main.c
 empty
 get_next_line
 leakdetect.*
-*nl
+*nl*
 
 # Prerequisites
 *.d
