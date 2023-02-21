@@ -6,7 +6,7 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:11 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 22:19:04 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/22 00:40:10 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,11 @@ char	*ft_strjoin_with_free(char *s1, char const *s2)
 	str = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (!str)
 		return (NULL);
-	i = 0;
-	while (s1_len--)
-	{
+	i = -1;
+	while (++i < s1_len)
 		str[i] = s1[i];
-		i++;
-	}
 	while (s2_len--)
-	{
-		str[i] = *s2++;
-		i++;
-	}
+		str[i++] = *s2++;
 	str[i] = '\0';
 	free(s1);
 	return (str);
