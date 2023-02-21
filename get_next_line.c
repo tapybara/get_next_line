@@ -6,7 +6,7 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:14 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 23:15:37 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/21 23:40:34 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ static char	*make_line(char *backup)
 	if (!str)
 		return (NULL);
 	i = 0;
-	while (i < trim_len){
+	while (i < trim_len)
+	{
 		str[i] = backup[i];
 		i++;
 	}
@@ -75,17 +76,16 @@ char	*get_next_line(int fd)
 	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
 		return (NULL);
-	read_bytes = 1;
 	while (!(ft_strchr(backup, '\n')))
 	{
 		read_bytes = read(fd, buf, BUFFER_SIZE);
 		if (read_bytes == -1)
 		{
 			free(buf);
-			return (NULL);	
+			return (NULL);
 		}
 		buf[read_bytes] = '\0';
-		backup = ft_strjoin_with_free(backup, buf); //結合前のbackupってfree必要じゃない？
+		backup = ft_strjoin_with_free(backup, buf);
 		if (!read_bytes)
 		{
 			if (ft_strlen(backup))
@@ -139,65 +139,3 @@ char	*get_next_line(int fd)
 // // static void destructor() {
 // //     system("leaks -q a.out");
 // // }
-
-// char	*ft_strjoin_with_free(char *s1, char const *s2)
-// {
-// 	char	*str;
-// 	size_t	s1_len;
-// 	size_t	s2_len;
-// 	size_t	i;
-
-// 	s1_len = 0;
-// 	s2_len = 0;
-// 	if (!s1 && !s2)
-// 		return (NULL);
-// 	if (s1)
-// 		s1_len = ft_strlen(s1);
-// 	if (s2)
-// 		s2_len = ft_strlen(s2);
-// 	str = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
-// 	if (!str)
-// 		return (NULL);
-// 	i = 0;
-// 	while (s1_len--)
-// 	{
-// 		str[i] = s1[i];
-// 		i++;
-// 	}
-// 	while (s2_len--)
-// 	{
-// 		str[i] = *s2++;
-// 		i++;
-// 	}
-// 	str[i] = '\0';
-// 	free(s1);
-// 	return (str);
-// }
-
-// char	*ft_strchr(const char *s, int c)
-// {
-// 	const char	*str;
-
-// 	if (!s)
-// 		return (NULL);
-// 	str = (char *)s;
-// 	while (*str != '\0')
-// 	{
-// 		if (*str == (char)c)
-// 			return ((char *)str);
-// 		str++;
-// 	}
-// 	if (c == '\0')
-// 		return ((char *)str);
-// 	return (NULL);
-// }
-
-// size_t	ft_strlen(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i] != '\0')
-// 		i++;
-// 	return (i);
-// }
