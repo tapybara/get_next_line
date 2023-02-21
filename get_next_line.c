@@ -6,7 +6,7 @@
 /*   By: okuyamatakahito <okuyamatakahito@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 23:44:14 by okuyamataka       #+#    #+#             */
-/*   Updated: 2023/02/21 23:40:34 by okuyamataka      ###   ########.fr       */
+/*   Updated: 2023/02/22 00:33:58 by okuyamataka      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,16 @@ static char	*make_line(char *backup)
 	return (str);
 }
 
+static int	is_missing_file(ssize_t read_bytes, char *buf)
+{
+	if (read_bytes == -1)
+	{
+		free(buf);
+		return (1);
+	}
+	return (0);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*backup;
@@ -79,11 +89,8 @@ char	*get_next_line(int fd)
 	while (!(ft_strchr(backup, '\n')))
 	{
 		read_bytes = read(fd, buf, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buf);
+		if (is_missing_file(read_bytes, buf))
 			return (NULL);
-		}
 		buf[read_bytes] = '\0';
 		backup = ft_strjoin_with_free(backup, buf);
 		if (!read_bytes)
